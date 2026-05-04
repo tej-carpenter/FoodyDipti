@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { firebaseDb } from '@/lib/firebase';
 import { mockRecipes } from '@/lib/mock-data';
 import type { Favorite, Recipe } from '@/types';
@@ -90,6 +90,25 @@ export async function uploadRecipe(recipe: Omit<Recipe, 'id' | 'created_at'>) {
     ...recipe,
     created_at: serverTimestamp(),
   });
+}
+
+type EditableRecipeFields = Pick<
+  Recipe,
+  'title' | 'image_url' | 'instagram_url' | 'ingredients' | 'steps' | 'predefined_tags' | 'custom_tags'
+>;
+
+export async function updateRecipe(id: string, updates: EditableRecipeFields) {
+  if (!firebaseDb) {
+    // No persistent updates in mock mode
+    return;
+  }
+
+  try {
+    await updateDoc(doc(requireDb(), 'recipes', id), updates);
+  } catch (err) {
+    console.error(`Failed to update recipe ${id}`, err);
+    throw err;
+  }
 }
 
 export async function deleteRecipe(id: string) {

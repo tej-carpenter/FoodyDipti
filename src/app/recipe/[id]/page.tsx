@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchRecipe } from '@/lib/firestore';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { RecipeActions } from '@/components/RecipeActions';
 import { DeleteRecipeButton } from '@/components/DeleteRecipeButton';
 import type { Recipe } from '@/types';
@@ -12,6 +13,7 @@ import type { Recipe } from '@/types';
 export default function RecipeDetailPageClient() {
   const params = useParams();
   const router = useRouter();
+  const { isAdmin } = useAuth();
   const id = params?.id as string | undefined;
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
@@ -51,7 +53,7 @@ export default function RecipeDetailPageClient() {
   }, [id, router]);
 
   if (loading) {
-    return <div className="py-8">Loading recipe…</div>;
+    return <div className="py-8">Loading recipe...</div>;
   }
 
   if (error || !recipe) {
@@ -80,6 +82,11 @@ export default function RecipeDetailPageClient() {
           </div>
           <div className="flex items-center gap-3">
             <RecipeActions recipeId={recipe.id} isSaved={false} />
+            {isAdmin ? (
+              <Link href={`/admin/recipe/${recipe.id}/edit`} className="rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-ink hover:bg-accentSoft">
+                Edit recipe
+              </Link>
+            ) : null}
             <DeleteRecipeButton recipeId={recipe.id} />
           </div>
           {recipe.instagram_url ? (
