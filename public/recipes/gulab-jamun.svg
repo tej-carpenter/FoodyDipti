@@ -1,0 +1,33 @@
+<svg width="1200" height="1500" viewBox="0 0 1200 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="1500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8E7C7"/>
+      <stop offset="1" stop-color="#D97706"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(600 520) rotate(90) scale(540 420)">
+      <stop stop-color="#FFF7ED" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#FFF7ED" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="1500" rx="80" fill="url(#bg)"/>
+  <rect width="1200" height="1500" rx="80" fill="url(#glow)"/>
+  <circle cx="330" cy="360" r="180" fill="#FFF7ED" fill-opacity="0.16"/>
+  <circle cx="915" cy="330" r="230" fill="#7C2D12" fill-opacity="0.14"/>
+  <ellipse cx="602" cy="1045" rx="390" ry="255" fill="#7C2D12" fill-opacity="0.2"/>
+  <g filter="url(#shadow)">
+    <ellipse cx="600" cy="990" rx="360" ry="230" fill="#FFFFFF" fill-opacity="0.2"/>
+    <circle cx="460" cy="940" r="98" fill="#8B4513"/>
+    <circle cx="610" cy="865" r="104" fill="#9A4B14"/>
+    <circle cx="760" cy="945" r="100" fill="#A04F1C"/>
+    <circle cx="520" cy="1060" r="92" fill="#B45A1D"/>
+    <circle cx="690" cy="1065" r="96" fill="#C56A24"/>
+    <path d="M330 1090C420 1000 506 940 598 940C690 940 780 994 870 1080" stroke="#FFF2C9" stroke-width="28" stroke-linecap="round" opacity="0.75"/>
+  </g>
+  <rect x="220" y="1180" width="760" height="110" rx="55" fill="#FFF7ED" fill-opacity="0.3"/>
+  <text x="600" y="1360" text-anchor="middle" fill="#FFF7ED" font-size="64" font-family="Arial, Helvetica, sans-serif" font-weight="700">Gulab Jamun</text>
+  <defs>
+    <filter id="shadow" x="210" y="650" width="780" height="550" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#4A250C" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+</svg>

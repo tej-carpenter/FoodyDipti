@@ -1,0 +1,14 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    match /recipe-images/{allPaths=**} {
+      allow read: if true;
+      allow write: if isSignedIn() && request.auth.token.email == request.resource.metadata.created_by;
+    }
+  }
+}
