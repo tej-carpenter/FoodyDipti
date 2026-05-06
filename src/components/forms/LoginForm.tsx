@@ -66,26 +66,26 @@ export function LoginForm() {
   };
 
   return (
-    <form onSubmit={submit} className="space-y-4 rounded-[1.75rem] border border-border bg-surface p-6 shadow-soft">
+    <form onSubmit={submit} className="space-y-4 rounded-[1.75rem] bg-[var(--surface)] p-6 shadow-[0_18px_45px_rgba(31,31,31,0.07)]">
       {mode === 'signup' && (
         <label className="block space-y-2">
-          <span className="text-sm font-medium text-ink">Name</span>
-          <input value={name} onChange={(event) => setName(event.target.value)} className="w-full rounded-2xl border border-border bg-white px-4 py-3 outline-none ring-0 transition focus:border-ink/30" />
+          <span className="text-sm font-medium text-[var(--text)]">Name</span>
+          <input value={name} onChange={(event) => setName(event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3 outline-none ring-0 transition focus:border-[rgba(217,119,6,0.35)] focus:shadow-[0_0_0_4px_rgba(217,119,6,0.08)]" />
         </label>
       )}
       <label className="block space-y-2">
-        <span className="text-sm font-medium text-ink">Email</span>
-        <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} className="w-full rounded-2xl border border-border bg-white px-4 py-3 outline-none ring-0 transition focus:border-ink/30" />
+        <span className="text-sm font-medium text-[var(--text)]">Email</span>
+        <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3 outline-none ring-0 transition focus:border-[rgba(217,119,6,0.35)] focus:shadow-[0_0_0_4px_rgba(217,119,6,0.08)]" />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm font-medium text-ink">Password</span>
-        <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-2xl border border-border bg-white px-4 py-3 outline-none ring-0 transition focus:border-ink/30" />
+        <span className="text-sm font-medium text-[var(--text)]">Password</span>
+        <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3 outline-none ring-0 transition focus:border-[rgba(217,119,6,0.35)] focus:shadow-[0_0_0_4px_rgba(217,119,6,0.08)]" />
       </label>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
-      {message && <p className="text-sm text-green-700">{message}</p>}
+      {message && <p className="text-sm text-[var(--accent)]">{message}</p>}
 
-      <button type="submit" disabled={loading} className="w-full rounded-full bg-ink px-4 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-60">
+      <button type="submit" disabled={loading} className="w-full rounded-full bg-[var(--accent)] px-4 py-3 text-sm font-medium text-white shadow-[0_14px_26px_rgba(217,119,6,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_32px_rgba(217,119,6,0.24)] disabled:opacity-60">
         {loading ? 'Working...' : mode === 'login' ? 'Log in' : 'Create account'}
       </button>
 
@@ -93,18 +93,18 @@ export function LoginForm() {
         type="button"
         onClick={continueWithGoogle}
         disabled={loading}
-        className="w-full rounded-full border border-border bg-white px-4 py-3 text-sm font-medium text-ink transition hover:border-ink/30 disabled:opacity-60"
+        className="w-full rounded-full bg-white px-4 py-3 text-sm font-medium text-[var(--text)] shadow-[0_10px_20px_rgba(31,31,31,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(31,31,31,0.08)] disabled:opacity-60"
       >
         Continue with Google
       </button>
 
       {mode === 'login' && (
-        <button type="button" onClick={forgotPassword} disabled={loading} className="w-full text-sm text-muted hover:text-ink disabled:opacity-60">
+        <button type="button" onClick={forgotPassword} disabled={loading} className="w-full text-sm text-[var(--muted)] transition hover:text-[var(--text)] disabled:opacity-60">
           Forgot password?
         </button>
       )}
 
-      <button type="button" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')} className="w-full text-sm text-muted hover:text-ink">
+      <button type="button" onClick={() => setMode(mode === 'login' ? 'signup' : 'login')} className="w-full text-sm text-[var(--muted)] transition hover:text-[var(--text)]">
         {mode === 'login' ? 'Need an account? Sign up' : 'Already have an account? Log in'}
       </button>
     </form>

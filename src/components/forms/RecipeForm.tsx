@@ -22,7 +22,7 @@ export function RecipeForm() {
   const parsedCustomTags = useMemo(() => customTags.split(',').map((tag) => tag.trim()).filter(Boolean), [customTags]);
 
   if (!isAdmin) {
-    return <div className="rounded-[1.75rem] border border-border bg-surface p-6 text-sm text-muted">Admin access only.</div>;
+    return <div className="rounded-[1.75rem] bg-[var(--surface)] p-6 text-sm text-[var(--muted)] shadow-[0_10px_20px_rgba(31,31,31,0.05)]">Admin access only.</div>;
   }
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -66,45 +66,45 @@ export function RecipeForm() {
   };
 
   return (
-    <form onSubmit={submit} className="space-y-5 rounded-[1.75rem] border border-border bg-surface p-6 shadow-soft">
+    <form onSubmit={submit} className="space-y-5 rounded-[1.75rem] bg-[var(--surface)] p-6 shadow-[0_18px_45px_rgba(31,31,31,0.06)]">
       <div className="grid gap-4 md:grid-cols-2">
         <label className="space-y-2">
-          <span className="text-sm font-medium text-ink">Title</span>
-          <input value={title} onChange={(event) => setTitle(event.target.value)} className="w-full rounded-2xl border border-border bg-white px-4 py-3" />
+          <span className="text-sm font-medium text-[var(--text)]">Title</span>
+          <input value={title} onChange={(event) => setTitle(event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
         </label>
         <label className="space-y-2">
-          <span className="text-sm font-medium text-ink">Instagram URL</span>
-          <input value={instagramUrl} onChange={(event) => setInstagramUrl(event.target.value)} className="w-full rounded-2xl border border-border bg-white px-4 py-3" />
+          <span className="text-sm font-medium text-[var(--text)]">Instagram URL</span>
+          <input value={instagramUrl} onChange={(event) => setInstagramUrl(event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
         </label>
       </div>
       <label className="space-y-2">
-        <span className="text-sm font-medium text-ink">Image URL</span>
-        <input value={imageUrl} onChange={(event) => setImageUrl(event.target.value)} className="w-full rounded-2xl border border-border bg-white px-4 py-3" />
+        <span className="text-sm font-medium text-[var(--text)]">Image URL</span>
+        <input value={imageUrl} onChange={(event) => setImageUrl(event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
       </label>
 
       <div className="grid gap-5 md:grid-cols-2">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-ink">Ingredients</span>
-            <button type="button" onClick={() => setIngredients((current) => [...current, ''])} className="text-sm text-accent">Add</button>
+            <span className="text-sm font-medium text-[var(--text)]">Ingredients</span>
+            <button type="button" onClick={() => setIngredients((current) => [...current, ''])} className="text-sm text-[var(--accent)]">Add</button>
           </div>
           {ingredients.map((ingredient, index) => (
-            <input key={`ingredient-${index}`} value={ingredient} onChange={(event) => updateList(ingredients, setIngredients, index, event.target.value)} className="w-full rounded-2xl border border-border bg-white px-4 py-3" />
+            <input key={`ingredient-${index}`} value={ingredient} onChange={(event) => updateList(ingredients, setIngredients, index, event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
           ))}
         </div>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-ink">Steps</span>
-            <button type="button" onClick={() => setSteps((current) => [...current, ''])} className="text-sm text-accent">Add</button>
+            <span className="text-sm font-medium text-[var(--text)]">Steps</span>
+            <button type="button" onClick={() => setSteps((current) => [...current, ''])} className="text-sm text-[var(--accent)]">Add</button>
           </div>
           {steps.map((step, index) => (
-            <input key={`step-${index}`} value={step} onChange={(event) => updateList(steps, setSteps, index, event.target.value)} className="w-full rounded-2xl border border-border bg-white px-4 py-3" />
+            <input key={`step-${index}`} value={step} onChange={(event) => updateList(steps, setSteps, index, event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
           ))}
         </div>
       </div>
 
       <div className="space-y-3">
-        <span className="text-sm font-medium text-ink">Predefined tags</span>
+        <span className="text-sm font-medium text-[var(--text)]">Predefined tags</span>
         <div className="flex flex-wrap gap-2">
           {predefinedTags.map((tag) => {
             const active = selectedTags.includes(tag);
@@ -113,7 +113,7 @@ export function RecipeForm() {
                 type="button"
                 key={tag}
                 onClick={() => setSelectedTags((current) => (current.includes(tag) ? current.filter((value) => value !== tag) : [...current, tag]))}
-                className={`rounded-full border px-3 py-1.5 text-sm transition ${active ? 'border-[#20160f] bg-[#20160f] text-white' : 'border-border bg-white text-ink hover:border-[#20160f]/30'}`}
+                className={`rounded-full px-3 py-1.5 text-sm transition-all duration-200 ease-out ${active ? 'bg-[var(--text)] text-white shadow-[0_10px_20px_rgba(31,31,31,0.06)]' : 'bg-white text-[var(--text)] shadow-[0_8px_18px_rgba(31,31,31,0.04)] hover:-translate-y-0.5'}`}
               >
                 {tag}
               </button>
@@ -123,13 +123,13 @@ export function RecipeForm() {
       </div>
 
       <label className="space-y-2">
-        <span className="text-sm font-medium text-ink">Custom tags</span>
-        <input value={customTags} onChange={(event) => setCustomTags(event.target.value)} placeholder="comma separated" className="w-full rounded-2xl border border-border bg-white px-4 py-3" />
+        <span className="text-sm font-medium text-[var(--text)]">Custom tags</span>
+        <input value={customTags} onChange={(event) => setCustomTags(event.target.value)} placeholder="comma separated" className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
       </label>
 
-      {status && <p className="text-sm text-muted">{status}</p>}
+      {status && <p className="text-sm text-[var(--muted)]">{status}</p>}
 
-      <button type="submit" disabled={saving} className="rounded-full bg-[#20160f] px-5 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-60">
+      <button type="submit" disabled={saving} className="rounded-full bg-[var(--accent)] px-6 py-4 text-sm font-medium text-white shadow-[0_14px_26px_rgba(217,119,6,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_32px_rgba(217,119,6,0.24)] disabled:opacity-60">
         {saving ? 'Saving...' : 'Upload recipe'}
       </button>
     </form>

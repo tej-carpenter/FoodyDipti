@@ -44,9 +44,9 @@ export function RecipeActions({ recipeId, isSaved }: { recipeId: string; isSaved
       type="button"
       onClick={toggle}
       disabled={!user || busy}
-      className={`rounded-full px-5 py-2.5 text-sm font-medium transition ${saved ? 'bg-ink text-white' : 'border border-border bg-surface text-ink hover:bg-accentSoft'} disabled:cursor-not-allowed disabled:opacity-60`}
+      className={`rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200 ease-out shadow-[0_12px_24px_rgba(217,119,6,0.16)] ${saved ? 'bg-[var(--text)] text-white hover:translate-y-[-1px]' : 'bg-[var(--accent)] text-white hover:translate-y-[-1px] hover:shadow-[0_16px_30px_rgba(217,119,6,0.22)]'} disabled:cursor-not-allowed disabled:opacity-60`}
     >
-      {saved ? 'Saved' : 'Save recipe'}
+      {saved ? 'Saved' : busy ? 'Saving...' : 'Save recipe'}
     </button>
   );
 }

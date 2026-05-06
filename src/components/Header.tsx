@@ -17,6 +17,10 @@ const navItems: NavItem[] = [
   { href: '/admin', label: 'Admin' },
 ];
 
+function isActivePath(pathname: string, href: string) {
+  return href === '/' ? pathname === '/' : pathname.startsWith(href);
+}
+
 export function Header() {
   const pathname = usePathname();
   const router = useRouter();
@@ -30,20 +34,20 @@ export function Header() {
   });
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border/80 bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-30 bg-[rgba(248,245,240,0.88)] shadow-[0_10px_30px_rgba(31,31,31,0.04)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="space-y-0.5">
-          <div className="text-lg font-semibold tracking-tight text-ink">FoodyDipti</div>
-          <div className="text-xs uppercase tracking-[0.3em] text-muted">Recipe archive</div>
+        <Link href="/" className="space-y-0.5 transition hover:opacity-90">
+          <div className="text-lg font-semibold tracking-[-0.03em] text-[var(--text)]">FoodyDipti</div>
+          <div className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">Recipe archive</div>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden items-center gap-5 md:flex">
+        <nav className="hidden items-center gap-2 md:flex">
           {visibleNavItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`text-sm transition ${pathname === item.href ? 'text-ink' : 'text-muted hover:text-ink'}`}
+              className={`rounded-full px-4 py-2 text-sm transition-all duration-200 ease-out ${isActivePath(pathname, item.href) ? 'bg-white text-[var(--text)] shadow-[0_10px_24px_rgba(31,31,31,0.06)]' : 'text-[var(--muted)] hover:bg-white/70 hover:text-[var(--text)]'}`}
             >
               {item.label}
             </Link>
@@ -54,15 +58,30 @@ export function Header() {
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden rounded-lg border border-border p-2 text-ink"
+          className="rounded-full bg-white p-2 text-[var(--text)] shadow-[0_10px_20px_rgba(31,31,31,0.06)] md:hidden"
         >
           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
 
-        <div className="hidden md:flex items-center gap-3">
-          <span className="text-sm text-muted">{user?.displayName ?? user?.email ?? 'Guest'}</span>
+        <div className="hidden items-center gap-3 md:flex">
+          {user ? (
+            <>
+              <Link href="/profile" className="flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-[0_10px_24px_rgba(31,31,31,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(31,31,31,0.08)]">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-[var(--accent)] text-sm font-semibold text-white">{(user.displayName ?? user.email ?? 'P')[0].toUpperCase()}</span>
+                <span className="text-sm font-medium text-[var(--text)]">Profile</span>
+              </Link>
+              <Link href="/profile" className="rounded-full bg-[rgba(217,119,6,0.12)] px-4 py-2 text-sm font-medium text-[var(--accent)] transition hover:bg-[rgba(217,119,6,0.18)]">
+                Saved
+              </Link>
+            </>
+          ) : (
+            <Link href="/login" className="flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-[0_10px_24px_rgba(31,31,31,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(31,31,31,0.08)]">
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-[var(--accent)] text-sm font-semibold text-white">P</span>
+              <span className="text-sm font-medium text-[var(--text)]">Profile</span>
+            </Link>
+          )}
           {user ? (
             <button
               type="button"
@@ -70,12 +89,12 @@ export function Header() {
                 await signOut();
                 router.push('/login');
               }}
-              className="rounded-full border border-border bg-surface px-4 py-2 text-sm text-ink transition hover:border-ink/20 hover:bg-accentSoft"
+              className="rounded-full bg-[var(--text)] px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
             >
               Log out
             </button>
           ) : (
-            <Link href="/login" className="rounded-full bg-ink px-4 py-2 text-sm text-white transition hover:opacity-90">
+            <Link href="/login" className="rounded-full bg-[var(--text)] px-4 py-2 text-sm font-medium text-white transition hover:opacity-90">
               Log in
             </Link>
           )}
@@ -84,21 +103,21 @@ export function Header() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-border bg-surface px-4 py-3 space-y-2">
+        <div className="space-y-2 border-t border-[rgba(31,31,31,0.06)] bg-[var(--surface)] px-4 py-3 md:hidden">
           {visibleNavItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setMobileMenuOpen(false)}
-              className={`block rounded-lg px-3 py-2 text-sm transition ${pathname === item.href ? 'bg-ink/10 text-ink font-medium' : 'text-muted hover:bg-ink/5 hover:text-ink'}`}
+              className={`block rounded-2xl px-3 py-2 text-sm transition ${isActivePath(pathname, item.href) ? 'bg-white text-[var(--text)] shadow-[0_8px_20px_rgba(31,31,31,0.05)]' : 'text-[var(--muted)] hover:bg-white/70 hover:text-[var(--text)]'}`}
             >
               {item.label}
             </Link>
           ))}
-          <div className="border-t border-border pt-3 space-y-2">
+          <div className="space-y-2 pt-3">
             {user ? (
               <>
-                <div className="px-3 py-2 text-sm text-muted">{user?.displayName ?? user?.email}</div>
+                <div className="rounded-2xl bg-white px-3 py-3 text-sm text-[var(--muted)] shadow-[0_8px_20px_rgba(31,31,31,0.05)]">{user?.displayName ?? user?.email}</div>
                 <button
                   type="button"
                   onClick={async () => {
@@ -106,7 +125,7 @@ export function Header() {
                     router.push('/login');
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-ink transition hover:bg-accentSoft"
+                  className="w-full rounded-2xl bg-[var(--text)] px-3 py-2 text-sm font-medium text-white transition hover:opacity-90"
                 >
                   Log out
                 </button>
@@ -115,7 +134,7 @@ export function Header() {
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block rounded-lg bg-ink px-3 py-2 text-center text-sm text-white transition hover:opacity-90"
+                className="block rounded-2xl bg-[var(--text)] px-3 py-2 text-center text-sm font-medium text-white transition hover:opacity-90"
               >
                 Log in
               </Link>

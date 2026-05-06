@@ -3,6 +3,11 @@ export type Recipe = {
   title: string;
   image_url: string;
   instagram_url?: string;
+  description?: string;
+  cooking_time_minutes?: number;
+  difficulty?: 'Easy' | 'Medium' | 'Hard';
+  saves_count?: number;
+  serving_count?: number;
   ingredients: string[];
   steps: string[];
   predefined_tags: string[];
