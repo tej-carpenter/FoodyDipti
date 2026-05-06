@@ -21,6 +21,9 @@ export function EditRecipeForm({ recipe }: EditRecipeFormProps) {
   const [steps, setSteps] = useState<string[]>(recipe.steps.length ? recipe.steps : ['']);
   const [selectedTags, setSelectedTags] = useState<string[]>(recipe.predefined_tags);
   const [customTags, setCustomTags] = useState(recipe.custom_tags.join(', '));
+  const [description, setDescription] = useState(recipe.description ?? '');
+  const [cookingTime, setCookingTime] = useState(recipe.cooking_time_minutes?.toString() ?? '');
+  const [difficulty, setDifficulty] = useState<'Easy' | 'Medium' | 'Hard'>(recipe.difficulty ?? 'Easy');
   const [status, setStatus] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -48,6 +51,9 @@ export function EditRecipeForm({ recipe }: EditRecipeFormProps) {
         steps: steps.map((item) => item.trim()).filter(Boolean),
         predefined_tags: selectedTags,
         custom_tags: parsedCustomTags,
+        description: description.trim(),
+        cooking_time_minutes: cookingTime ? parseInt(cookingTime, 10) : undefined,
+        difficulty,
       });
       setStatus('Recipe updated. Redirecting...');
       router.push(`/recipe/${recipe.id}`);
@@ -80,6 +86,30 @@ export function EditRecipeForm({ recipe }: EditRecipeFormProps) {
       <label className="space-y-2">
         <span className="text-sm font-medium text-[var(--text)]">Image URL</span>
         <input value={imageUrl} onChange={(event) => setImageUrl(event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
+      </label>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        <label className="space-y-2">
+          <span className="text-sm font-medium text-[var(--text)]">Cooking Time (minutes)</span>
+          <input type="number" value={cookingTime} onChange={(event) => setCookingTime(event.target.value)} placeholder="e.g. 30" className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
+        </label>
+        <label className="space-y-2">
+          <span className="text-sm font-medium text-[var(--text)]">Difficulty</span>
+          <select value={difficulty} onChange={(event) => setDifficulty(event.target.value as 'Easy' | 'Medium' | 'Hard')} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3">
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </label>
+        <label className="space-y-2">
+          <span className="text-sm font-medium text-[var(--text)]">Servings</span>
+          <input type="number" placeholder="e.g. 2" className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
+        </label>
+      </div>
+
+      <label className="space-y-2">
+        <span className="text-sm font-medium text-[var(--text)]">Description</span>
+        <textarea value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Short description of the recipe" rows={3} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
       </label>
 
       <div className="grid gap-5 md:grid-cols-2">

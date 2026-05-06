@@ -90,11 +90,12 @@ export function Header() {
                 router.push('/login');
               }}
               className="rounded-full bg-[var(--text)] px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+              style={{ color: '#fff' }}
             >
               Log out
             </button>
           ) : (
-            <Link href="/login" className="rounded-full bg-[var(--text)] px-4 py-2 text-sm font-medium text-white transition hover:opacity-90">
+            <Link href="/login" className="rounded-full bg-[var(--text)] px-4 py-2 text-sm font-medium text-white transition hover:opacity-90" style={{ color: '#fff' }}>
               Log in
             </Link>
           )}
@@ -126,6 +127,7 @@ export function Header() {
                     setMobileMenuOpen(false);
                   }}
                   className="w-full rounded-2xl bg-[var(--text)] px-3 py-2 text-sm font-medium text-white transition hover:opacity-90"
+                  style={{ color: '#fff' }}
                 >
                   Log out
                 </button>
@@ -135,6 +137,7 @@ export function Header() {
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block rounded-2xl bg-[var(--text)] px-3 py-2 text-center text-sm font-medium text-white transition hover:opacity-90"
+                style={{ color: '#fff' }}
               >
                 Log in
               </Link>

@@ -94,7 +94,7 @@ export async function uploadRecipe(recipe: Omit<Recipe, 'id' | 'created_at'>) {
 
 type EditableRecipeFields = Pick<
   Recipe,
-  'title' | 'image_url' | 'instagram_url' | 'ingredients' | 'steps' | 'predefined_tags' | 'custom_tags'
+  'title' | 'image_url' | 'instagram_url' | 'ingredients' | 'steps' | 'predefined_tags' | 'custom_tags' | 'description' | 'cooking_time_minutes' | 'difficulty'
 >;
 
 export async function updateRecipe(id: string, updates: EditableRecipeFields) {

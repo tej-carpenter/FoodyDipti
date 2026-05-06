@@ -42,7 +42,7 @@ export default function HomePage() {
 
           <div className="flex flex-wrap gap-3">
             {!user && <Link href="/login" className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-medium text-white shadow-[0_14px_26px_rgba(217,119,6,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_32px_rgba(217,119,6,0.24)]">Explore dishes</Link>}
-            {user && <Link href="/profile" className="rounded-full bg-[var(--text)] px-5 py-3 text-sm font-medium text-white transition hover:opacity-90">Explore dishes</Link>}
+            {user && <Link href="/profile" className="rounded-full bg-[var(--text)] px-5 py-3 text-sm font-medium text-white transition hover:opacity-90" style={{ color: '#fff' }}>Explore dishes</Link>}
             <Link href="#trending" className="rounded-full bg-white px-5 py-3 text-sm font-medium text-[var(--text)] shadow-[0_10px_20px_rgba(31,31,31,0.05)] transition hover:-translate-y-0.5">
               Trending today
             </Link>
@@ -153,7 +153,7 @@ export default function HomePage() {
                 <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">Quick under 20 minutes</p>
                 <h3 className="mt-2 text-xl font-semibold tracking-[-0.03em] text-[var(--text)]">Fast wins for busy days</h3>
               </div>
-              <RecipeGrid recipes={quickRecipes.length ? quickRecipes : filteredRecipes.slice(0, 2)} />
+              <RecipeGrid recipes={quickRecipes.length ? quickRecipes : filteredRecipes.slice(0, 2)} compact />
             </section>
 
             <section className="space-y-4 rounded-[1.75rem] bg-[var(--surface)] p-5 shadow-[0_14px_35px_rgba(31,31,31,0.05)]">
@@ -161,7 +161,7 @@ export default function HomePage() {
                 <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">Comfort food</p>
                 <h3 className="mt-2 text-xl font-semibold tracking-[-0.03em] text-[var(--text)]">Warm dishes people return to</h3>
               </div>
-              <RecipeGrid recipes={comfortRecipes.length ? comfortRecipes : filteredRecipes.slice(0, 2)} />
+              <RecipeGrid recipes={comfortRecipes.length ? comfortRecipes : filteredRecipes.slice(0, 2)} compact />
             </section>
 
             <section className="space-y-4 rounded-[1.75rem] bg-[var(--surface)] p-5 shadow-[0_14px_35px_rgba(31,31,31,0.05)]">
@@ -169,7 +169,7 @@ export default function HomePage() {
                 <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">Recently added</p>
                 <h3 className="mt-2 text-xl font-semibold tracking-[-0.03em] text-[var(--text)]">Fresh arrivals worth a save</h3>
               </div>
-              <RecipeGrid recipes={recipes.slice(0, 2)} />
+              <RecipeGrid recipes={recipes.slice(0, 2)} compact />
             </section>
           </div>
         </div>
