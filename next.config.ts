@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'instagram.com' },
       { protocol: 'https', hostname: 'cdninstagram.com' },
       { protocol: 'https', hostname: '4.ftcdn.net' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
     ],
   },
 };
