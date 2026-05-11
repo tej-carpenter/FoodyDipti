@@ -86,7 +86,7 @@ export default function AboutPage() {
         <div className="grid gap-12 items-center md:grid-cols-2">
           <div className="relative h-96 w-full rounded-[2rem] bg-gradient-to-br from-[rgba(198,138,43,0.1)] to-[rgba(217,119,6,0.05)]">
             <img
-              src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&h=400&fit=crop"
+              src="https://res.cloudinary.com/dcggnrkuy/image/upload/v1778323617/IMG-20220225-WA0002_-_Copy_2_peligw.jpg"
               alt="Dipti cooking"
               className="h-full w-full rounded-[2rem] object-cover"
             />
@@ -114,7 +114,7 @@ export default function AboutPage() {
           <div className="space-y-3 text-center">
             <p className="text-xs uppercase tracking-[0.34em] text-[var(--muted)]">Our Philosophy</p>
             <h2 className="text-3xl font-semibold leading-tight tracking-[-0.03em] text-[var(--text)]">
-              What You\'ll Find Here
+              What You'll Find Here
             </h2>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -164,19 +164,39 @@ export default function AboutPage() {
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { h: 'h-64', label: 'Fresh ingredients' },
-              { h: 'h-96 sm:col-span-2', label: 'Plating moments' },
-              { h: 'h-64', label: 'Coffee breaks' },
-              { h: 'h-80 lg:col-span-2', label: 'Café-style dishes' },
-              { h: 'h-64', label: 'Dessert close-ups' },
+              {
+                h: 'h-64',
+                label: 'Fresh ingredients',
+                src: 'https://res.cloudinary.com/dcggnrkuy/image/upload/v1778528722/Vegetables-3_ezo3ef.jpg',
+              },
+              {
+                h: 'h-96 sm:col-span-2',
+                label: 'Plating moments',
+                src: 'https://res.cloudinary.com/dcggnrkuy/image/upload/v1778534449/delicious-indian-dosa-assortment_huv08g.jpg',
+              },
+              {
+                h: 'h-64',
+                label: 'Coffee breaks',
+                src: 'https://res.cloudinary.com/dcggnrkuy/image/upload/v1778532725/Screenshot_2026-05-12_022119_evvwxl.png',
+              },
+              {
+                h: 'h-80 lg:col-span-2',
+                label: 'Café-style dishes',
+                src: 'https://res.cloudinary.com/dcggnrkuy/image/upload/v1778523817/Screenshot_2026-05-11_235141_p0eaed.png',
+              },
+              {
+                h: 'h-64',
+                label: 'Dessert close-ups',
+                src: 'https://picsum.photos/id/312/1200/900',
+              },
             ].map((item, idx) => (
               <div
                 key={idx}
-                className={`${item.h} rounded-[1.75rem] bg-gradient-to-br from-[rgba(198,138,43,0.08)] to-[rgba(217,119,6,0.06)] shadow-[0_10px_20px_rgba(31,31,31,0.05)]`}
+                className={`${item.h} relative overflow-hidden rounded-[1.75rem] shadow-[0_10px_20px_rgba(31,31,31,0.05)]`}
               >
-                <div className="flex h-full items-center justify-center">
-                  <p className="text-sm text-[var(--muted)]">{item.label}</p>
-                </div>
+                <img src={item.src} alt={item.label} className="h-full w-full object-cover" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/5 to-transparent" />
+                <p className="absolute bottom-4 left-4 text-sm font-medium text-white">{item.label}</p>
               </div>
             ))}
           </div>
