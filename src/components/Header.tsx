@@ -13,9 +13,38 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { href: '/', label: 'Browse' },
+  { href: '/about', label: 'About' },
   { href: '/profile', label: 'Saved', requiresAuth: true },
   { href: '/admin', label: 'Admin' },
 ];
+
+function IconHome(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M3 10.5 12 3l9 7.5" />
+      <path d="M5.5 9.5V21h13V9.5" />
+      <path d="M9.5 21v-6h5v6" />
+    </svg>
+  );
+}
+
+function IconInfo(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 10.5v6" />
+      <path d="M12 7.5h.01" />
+    </svg>
+  );
+}
+
+function IconBookmark(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M6 4.5h12v16l-6-3-6 3z" />
+    </svg>
+  );
+}
 
 function isActivePath(pathname: string, href: string) {
   return href === '/' ? pathname === '/' : pathname.startsWith(href);
@@ -43,15 +72,21 @@ export function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden items-center gap-2 md:flex">
-          {visibleNavItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`rounded-full px-4 py-2 text-sm transition-all duration-200 ease-out ${isActivePath(pathname, item.href) ? 'bg-white text-[var(--text)] shadow-[0_10px_24px_rgba(31,31,31,0.06)]' : 'text-[var(--muted)] hover:bg-white/70 hover:text-[var(--text)]'}`}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {visibleNavItems.map((item) => {
+            const icon = item.href === '/' ? <IconHome className="h-4 w-4" /> : item.href === '/about' ? <IconInfo className="h-4 w-4" /> : <IconBookmark className="h-4 w-4" />;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`rounded-full px-4 py-2 text-sm transition-all duration-200 ease-out ${isActivePath(pathname, item.href) ? 'bg-white text-[var(--text)] shadow-[0_10px_24px_rgba(31,31,31,0.06)]' : 'text-[var(--muted)] hover:bg-white/70 hover:text-[var(--text)]'}`}
+              >
+                <span className="flex items-center gap-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[rgba(31,31,31,0.04)] text-[var(--text)]">{icon}</span>
+                  <span>{item.label}</span>
+                </span>
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Mobile Menu Button */}
@@ -105,16 +140,22 @@ export function Header() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="space-y-2 border-t border-[rgba(31,31,31,0.06)] bg-[var(--surface)] px-4 py-3 md:hidden">
-          {visibleNavItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className={`block rounded-2xl px-3 py-2 text-sm transition ${isActivePath(pathname, item.href) ? 'bg-white text-[var(--text)] shadow-[0_8px_20px_rgba(31,31,31,0.05)]' : 'text-[var(--muted)] hover:bg-white/70 hover:text-[var(--text)]'}`}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {visibleNavItems.map((item) => {
+            const icon = item.href === '/' ? <IconHome className="h-4 w-4" /> : item.href === '/about' ? <IconInfo className="h-4 w-4" /> : <IconBookmark className="h-4 w-4" />;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block rounded-2xl px-3 py-2 text-sm transition ${isActivePath(pathname, item.href) ? 'bg-white text-[var(--text)] shadow-[0_8px_20px_rgba(31,31,31,0.05)]' : 'text-[var(--muted)] hover:bg-white/70 hover:text-[var(--text)]'}`}
+              >
+                <span className="flex items-center gap-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[rgba(31,31,31,0.04)] text-[var(--text)]">{icon}</span>
+                  <span>{item.label}</span>
+                </span>
+              </Link>
+            );
+          })}
           <div className="space-y-2 pt-3">
             {user ? (
               <>

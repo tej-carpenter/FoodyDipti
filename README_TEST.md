@@ -1,4 +1,4 @@
-# Test README — Run the FoodyDipti App Locally
+# Test README - Run the FoodyDipti App Locally
 
 This file describes how to run and test the FoodyDipti site locally on your laptop.
 

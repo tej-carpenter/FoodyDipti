@@ -5,7 +5,9 @@
   --background: #f8f5f0;
   --surface: #fffdf9;
   --accent: #d97706;
-  --text: #1f1f1f;
+  --accent-secondary: #c68a2b;
+  --text: #2a2a2a;
+  --text-light: #1f1f1f;
   --muted: #6b7280;
   --border: rgba(31, 31, 31, 0.08);
   --shadow-soft: 0 18px 50px rgba(31, 31, 31, 0.06);
