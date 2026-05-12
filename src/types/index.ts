@@ -29,3 +29,15 @@ export type AppUser = {
   name: string;
   created_at: string;
 };
+
+export type ContactSubmission = {
+  id: string;
+  name: string;
+  contact: string;
+  message: string;
+  created_at: string;
+  status?: 'unread' | 'read';
+  email_status?: 'sent' | 'skipped' | 'failed';
+  email_error?: string;
+  admin_emails?: string[];
+};

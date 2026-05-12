@@ -1,7 +1,8 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
+import type { DocumentData } from 'firebase/firestore';
 import { firebaseDb } from '@/lib/firebase';
 import { mockRecipes } from '@/lib/mock-data';
-import type { Favorite, Recipe } from '@/types';
+import type { ContactSubmission, Favorite, Recipe } from '@/types';
 
 function requireDb() {
   if (!firebaseDb) {
@@ -58,6 +59,80 @@ export async function fetchFavorites(userId: string) {
   } catch (fetchError) {
     console.error('Failed to fetch favorites from Firestore. Falling back to empty favorites.', fetchError);
     return [];
+  }
+}
+
+export async function createContactSubmission(submission: Omit<ContactSubmission, 'id'>) {
+  if (!firebaseDb) {
+    // fallback to local API
+    try {
+      const res = await fetch('/api/contact/local', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(submission),
+      });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (err) {
+      console.error('Local save failed', err);
+      return null;
+    }
+  }
+
+  // Firestore rejects fields with `undefined` values. strip them out before saving.
+  const payload = { ...submission } as Record<string, unknown>;
+  Object.keys(payload).forEach((k) => {
+    if (typeof payload[k] === 'undefined') delete payload[k];
+  });
+
+  const documentReference = await addDoc(collection(requireDb(), 'contact_messages'), payload as DocumentData);
+  return { id: documentReference.id, ...(payload as Omit<ContactSubmission, 'id'>) };
+}
+
+export async function markContactSubmissionRead(id: string, status: 'read' | 'unread') {
+  if (!firebaseDb) {
+    await fetch('/api/contact/local', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status }),
+    });
+    return;
+  }
+
+  await updateDoc(doc(requireDb(), 'contact_messages', id), {
+    status,
+  });
+}
+
+export async function deleteContactSubmission(id: string) {
+  if (!firebaseDb) {
+    await fetch(`/api/contact/local?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    });
+    return;
+  }
+
+  await deleteDoc(doc(requireDb(), 'contact_messages', id));
+}
+
+export async function fetchContactSubmissions() {
+  if (!firebaseDb) {
+    try {
+      const res = await fetch('/api/contact/local');
+      if (!res.ok) return [] as ContactSubmission[];
+      return (await res.json()) as ContactSubmission[];
+    } catch (err) {
+      console.error('Failed to fetch local contact submissions', err);
+      return [] as ContactSubmission[];
+    }
+  }
+
+  try {
+    const snapshot = await getDocs(query(collection(requireDb(), 'contact_messages'), orderBy('created_at', 'desc'), limit(50)));
+    return snapshot.docs.map((document) => ({ id: document.id, ...(document.data() as Omit<ContactSubmission, 'id'>) }));
+  } catch (fetchError) {
+    console.error('Failed to fetch contact submissions from Firestore.', fetchError);
+    return [] as ContactSubmission[];
   }
 }
 

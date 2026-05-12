@@ -58,14 +58,11 @@ function IconYoutube(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-function IconLinkedIn(props: React.SVGProps<SVGSVGElement>) {
+function IconFacebook(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <rect x="3.5" y="3.5" width="17" height="17" rx="3" />
-      <path d="M8 10v5" />
-      <path d="M8 8.2v.1" />
-      <path d="M11 15v-2.7c0-1.4.8-2.3 2-2.3 1.3 0 2 .9 2 2.3V15" />
-      <path d="M15 12v3" />
+      <rect x="4" y="4" width="16" height="16" rx="3" />
+      <path d="M10 14v3h2v-3h2v-2h-2V10c0-.6.4-1 1-1h1V7c-.5 0-1.5-.2-2.3-.2-2.3 0-4 1.5-4 4.2V12h-2v2h2z" fill="currentColor" stroke="none" />
     </svg>
   );
 }
@@ -106,13 +103,15 @@ export function Footer() {
   const navigationLinks = [
     { href: '/', label: 'Browse', icon: <IconHome className="h-4 w-4" /> },
     { href: '/about', label: 'About', icon: <IconInfo className="h-4 w-4" /> },
+    { href: '/contact', label: 'Contact', icon: <IconMail className="h-4 w-4" /> },
     { href: '/profile', label: 'Saved', icon: <IconBookmark className="h-4 w-4" /> },
   ];
 
   const socialLinks = [
     { href: 'https://instagram.com/foodydipti', label: 'Instagram', icon: <IconInstagram className="h-4 w-4" />, external: true },
-    { href: 'mailto:hello@foodydipti.com', label: 'Email', icon: <IconMail className="h-4 w-4" />, external: true },
+    { href: 'mailto:foodydipti@gmail.com', label: 'Email', icon: <IconMail className="h-4 w-4" />, external: true },
     { href: 'https://www.youtube.com/@foodydiptii', label: 'YouTube', icon: <IconYoutube className="h-4 w-4" />, external: true },
+    { href: 'https://facebook.com/foodydipti', label: 'Facebook', icon: <IconFacebook className="h-4 w-4" />, external: true },
   ];
 
   return (

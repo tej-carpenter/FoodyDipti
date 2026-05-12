@@ -14,6 +14,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { href: '/', label: 'Browse' },
   { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
   { href: '/profile', label: 'Saved', requiresAuth: true },
   { href: '/admin', label: 'Admin' },
 ];
@@ -46,6 +47,15 @@ function IconBookmark(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+function IconMail(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="4" y="6" width="16" height="12" rx="2" />
+      <path d="m5.5 7.5 6.5 5 6.5-5" />
+    </svg>
+  );
+}
+
 function isActivePath(pathname: string, href: string) {
   return href === '/' ? pathname === '/' : pathname.startsWith(href);
 }
@@ -73,7 +83,11 @@ export function Header() {
         {/* Desktop Nav */}
         <nav className="hidden items-center gap-2 md:flex">
           {visibleNavItems.map((item) => {
-            const icon = item.href === '/' ? <IconHome className="h-4 w-4" /> : item.href === '/about' ? <IconInfo className="h-4 w-4" /> : <IconBookmark className="h-4 w-4" />;
+            let icon;
+            if (item.href === '/') icon = <IconHome className="h-4 w-4" />;
+            else if (item.href === '/about') icon = <IconInfo className="h-4 w-4" />;
+            else if (item.href === '/contact') icon = <IconMail className="h-4 w-4" />;
+            else icon = <IconBookmark className="h-4 w-4" />;
             return (
               <Link
                 key={item.href}
@@ -141,7 +155,11 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="space-y-2 border-t border-[rgba(31,31,31,0.06)] bg-[var(--surface)] px-4 py-3 md:hidden">
           {visibleNavItems.map((item) => {
-            const icon = item.href === '/' ? <IconHome className="h-4 w-4" /> : item.href === '/about' ? <IconInfo className="h-4 w-4" /> : <IconBookmark className="h-4 w-4" />;
+            let icon;
+            if (item.href === '/') icon = <IconHome className="h-4 w-4" />;
+            else if (item.href === '/about') icon = <IconInfo className="h-4 w-4" />;
+            else if (item.href === '/contact') icon = <IconMail className="h-4 w-4" />;
+            else icon = <IconBookmark className="h-4 w-4" />;
             return (
               <Link
                 key={item.href}

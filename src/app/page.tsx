@@ -96,42 +96,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="space-y-4 rounded-[1.75rem] bg-[var(--surface)] p-5 shadow-[0_14px_35px_rgba(31,31,31,0.05)]">
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="text-lg font-semibold tracking-[-0.02em] text-[var(--text)]">Filter by category</h2>
-          {selectedTags.length > 0 && (
-            <button
-              onClick={() => setSelectedTags([])}
-              className="text-sm text-[var(--accent)] transition hover:underline"
-            >
-              Clear filters
-            </button>
-          )}
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {predefinedTags.map((tag) => {
-            const active = selectedTags.includes(tag);
-            return (
-              <button
-                key={tag}
-                onClick={() => setSelectedTags((current) =>
-                  current.includes(tag)
-                    ? current.filter((t) => t !== tag)
-                    : [...current, tag]
-                )}
-                className={`rounded-full px-3 py-1.5 text-sm transition-all duration-200 ease-out ${
-                  active
-                    ? 'bg-[var(--text)] text-white shadow-[0_10px_20px_rgba(31,31,31,0.06)]'
-                    : 'bg-white text-[var(--text)] shadow-[0_8px_18px_rgba(31,31,31,0.04)] hover:-translate-y-0.5'
-                }`}
-              >
-                {tag}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
       <section id="trending" className="space-y-6">
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Discovery loop</p>
@@ -171,6 +135,42 @@ export default function HomePage() {
               </div>
               <RecipeGrid recipes={recipes.slice(0, 2)} compact />
             </section>
+          </div>
+
+          <div className="space-y-4 rounded-[1.75rem] bg-[var(--surface)] p-5 shadow-[0_14px_35px_rgba(31,31,31,0.05)]">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-lg font-semibold tracking-[-0.02em] text-[var(--text)]">Filter by category</h2>
+              {selectedTags.length > 0 && (
+                <button
+                  onClick={() => setSelectedTags([])}
+                  className="text-sm text-[var(--accent)] transition hover:underline"
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {predefinedTags.map((tag) => {
+                const active = selectedTags.includes(tag);
+                return (
+                  <button
+                    key={tag}
+                    onClick={() => setSelectedTags((current) =>
+                      current.includes(tag)
+                        ? current.filter((t) => t !== tag)
+                        : [...current, tag]
+                    )}
+                    className={`rounded-full px-3 py-1.5 text-sm transition-all duration-200 ease-out ${
+                      active
+                        ? 'bg-[var(--text)] text-white shadow-[0_10px_20px_rgba(31,31,31,0.06)]'
+                        : 'bg-white text-[var(--text)] shadow-[0_8px_18px_rgba(31,31,31,0.04)] hover:-translate-y-0.5'
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
