@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/components/auth/AuthProvider';
 
 type NavItem = {
@@ -65,6 +65,40 @@ export function Header() {
   const router = useRouter();
   const { user, isAdmin, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    let scrollTimeout: NodeJS.Timeout;
+    
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        // Show header when at top
+        if (currentScrollY < 50) {
+          setIsVisible(true);
+        }
+        // Hide when scrolling down
+        else if (currentScrollY > lastScrollY) {
+          setIsVisible(false);
+        }
+        // Show when scrolling up
+        else if (currentScrollY < lastScrollY) {
+          setIsVisible(true);
+        }
+        
+        setLastScrollY(currentScrollY);
+      }, 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, [lastScrollY]);
 
   const visibleNavItems = navItems.filter((item) => {
     if (item.requiresAuth && !user) return false;
@@ -73,7 +107,7 @@ export function Header() {
   });
 
   return (
-    <header className="sticky top-0 z-30 bg-[rgba(248,245,240,0.88)] shadow-[0_10px_30px_rgba(31,31,31,0.04)] backdrop-blur-xl">
+    <header className={`fixed top-0 left-0 right-0 z-30 bg-[rgba(248,245,240,0.88)] shadow-[0_10px_30px_rgba(31,31,31,0.04)] backdrop-blur-xl transition-transform duration-300 ease-out ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="space-y-0.5 transition hover:opacity-90">
           <div className="text-lg font-semibold tracking-[-0.03em] text-[var(--text)]">FoodyDipti</div>

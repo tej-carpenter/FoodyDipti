@@ -2,28 +2,63 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { RecipeGrid } from '@/components/RecipeGrid';
+import { PaginatedRecipeGrid } from '@/components/PaginatedRecipeGrid';
+import { SearchFilterBar } from '@/components/SearchFilterBar';
 import { fetchRecipes } from '@/lib/firestore';
 import { getRecipeMetrics } from '@/lib/recipe-ui';
-import { predefinedTags } from '@/lib/mock-data';
 import type { Recipe } from '@/types';
 
 export default function HomePage() {
   const { user } = useAuth();
+  const searchFilterRef = useRef<HTMLDivElement>(null);
+  const browseResultsRef = useRef<HTMLDivElement>(null);
+  const [isSearchBarSticky, setIsSearchBarSticky] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchRecipes().then(setRecipes);
   }, []);
 
-  const filteredRecipes = selectedTags.length === 0
-    ? recipes
-    : recipes.filter((recipe) =>
-        selectedTags.some((tag) => recipe.predefined_tags.includes(tag))
-      );
+  // Handle sticky search bar on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (searchFilterRef.current) {
+        const rect = searchFilterRef.current.getBoundingClientRect();
+        const headerHeight = 70; // Approximate header height
+        setIsSearchBarSticky(rect.top <= headerHeight);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Scroll to browse results when search or filters change
+  useEffect(() => {
+    if ((searchQuery || selectedTags.length > 0) && browseResultsRef.current) {
+      setTimeout(() => {
+        browseResultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [searchQuery, selectedTags]);
+
+  const filteredRecipes = recipes.filter((recipe) => {
+    // Filter by search query (title and description)
+    const matchesSearch = searchQuery === '' || 
+      recipe.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (recipe.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
+    
+    // Filter by tags
+    const matchesTags = selectedTags.length === 0 ||
+      selectedTags.some((tag) => recipe.predefined_tags.includes(tag));
+    
+    return matchesSearch && matchesTags;
+  });
 
   const featuredRecipes = recipes.slice(0, 2);
   const trendingRecipes = recipes.slice(0, 4);
@@ -31,7 +66,26 @@ export default function HomePage() {
   const comfortRecipes = recipes.filter((recipe) => recipe.predefined_tags.includes('Dessert') || recipe.predefined_tags.includes('Indian')).slice(0, 4);
 
   return (
-    <div className="space-y-10 py-8">
+    <div>
+      {/* Fixed header space filler */}
+      <div className="h-[70px]" />
+
+      {/* Main content */}
+      <div className="space-y-10 py-8">
+        {/* Search and Filter Bar - initially inline, becomes sticky on scroll */}
+        <div ref={searchFilterRef}>
+          <SearchFilterBar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedTags={selectedTags}
+            onTagsChange={setSelectedTags}
+            resultsCount={filteredRecipes.length}
+            isSticky={isSearchBarSticky}
+          />
+        </div>
+
+        {/* Add spacing when search bar becomes sticky */}
+        {isSearchBarSticky && <div className="h-[200px]" />}
       <section className="grid gap-8 rounded-[2rem] bg-[var(--surface)] p-5 shadow-[0_18px_45px_rgba(31,31,31,0.06)] lg:grid-cols-[1.05fr_0.95fr] lg:p-8">
         <div className="space-y-6">
           <div className="space-y-3">
@@ -69,7 +123,7 @@ export default function HomePage() {
             <div className="absolute inset-x-0 bottom-0 p-5 text-white">
               <p className="text-xs uppercase tracking-[0.28em] text-white/80">Featured recipe</p>
               <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">{featuredRecipes[0]?.title ?? 'Comfort food, made easy'}</h2>
-              <p className="mt-2 max-w-sm text-sm leading-6 text-white/80">{featuredRecipes[0] ? getRecipeMetrics(featuredRecipes[0]).description : 'A calm starting point for the day’s most clicked dishes.'}</p>
+              <p className="mt-2 max-w-sm text-sm leading-6 text-white/80">{featuredRecipes[0] ? getRecipeMetrics(featuredRecipes[0]).description : "A calm starting point for the day's most clicked dishes."}</p>
             </div>
           </div>
 
@@ -136,46 +190,27 @@ export default function HomePage() {
               <RecipeGrid recipes={recipes.slice(0, 2)} compact />
             </section>
           </div>
-
-          <div className="space-y-4 rounded-[1.75rem] bg-[var(--surface)] p-5 shadow-[0_14px_35px_rgba(31,31,31,0.05)]">
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-[var(--text)]">Filter by category</h2>
-              {selectedTags.length > 0 && (
-                <button
-                  onClick={() => setSelectedTags([])}
-                  className="text-sm text-[var(--accent)] transition hover:underline"
-                >
-                  Clear filters
-                </button>
-              )}
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {predefinedTags.map((tag) => {
-                const active = selectedTags.includes(tag);
-                return (
-                  <button
-                    key={tag}
-                    onClick={() => setSelectedTags((current) =>
-                      current.includes(tag)
-                        ? current.filter((t) => t !== tag)
-                        : [...current, tag]
-                    )}
-                    className={`rounded-full px-3 py-1.5 text-sm transition-all duration-200 ease-out ${
-                      active
-                        ? 'bg-[var(--text)] text-white shadow-[0_10px_20px_rgba(31,31,31,0.06)]'
-                        : 'bg-white text-[var(--text)] shadow-[0_8px_18px_rgba(31,31,31,0.04)] hover:-translate-y-0.5'
-                    }`}
-                  >
-                    {tag}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
       </section>
 
-      <RecipeGrid recipes={filteredRecipes} />
+      <section className="space-y-4" ref={browseResultsRef}>
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-2xl font-semibold tracking-[-0.03em] text-[var(--text)]">Browse all recipes</h2>
+          {!isSearchBarSticky && (searchQuery || selectedTags.length > 0) && (
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedTags([]);
+              }}
+              className="text-sm text-[var(--accent)] transition hover:underline"
+            >
+              Clear all
+            </button>
+          )}
+        </div>
+        <PaginatedRecipeGrid recipes={filteredRecipes} pageSize={12} />
+      </section>
+      </div>
     </div>
   );
 }
