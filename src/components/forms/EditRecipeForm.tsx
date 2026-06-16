@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { predefinedTags } from '@/lib/mock-data';
 import { updateRecipe } from '@/lib/firestore';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { uploadImageToCloudinary } from '@/lib/cloudinary';
 import type { Recipe } from '@/types';
 
 type EditRecipeFormProps = {
@@ -17,6 +18,8 @@ export function EditRecipeForm({ recipe }: EditRecipeFormProps) {
   const [title, setTitle] = useState(recipe.title);
   const [instagramUrl, setInstagramUrl] = useState(recipe.instagram_url ?? '');
   const [imageUrl, setImageUrl] = useState(recipe.image_url);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
   const [ingredients, setIngredients] = useState<string[]>(recipe.ingredients.length ? recipe.ingredients : ['']);
   const [steps, setSteps] = useState<string[]>(recipe.steps.length ? recipe.steps : ['']);
   const [selectedTags, setSelectedTags] = useState<string[]>(recipe.predefined_tags);
@@ -43,9 +46,18 @@ export function EditRecipeForm({ recipe }: EditRecipeFormProps) {
     setStatus('');
 
     try {
+      let finalImageUrl = imageUrl;
+      
+      if (imageFile) {
+        setStatus('Uploading new image...');
+        finalImageUrl = await uploadImageToCloudinary(imageFile);
+      }
+
+      setStatus('Saving recipe...');
+
       await updateRecipe(recipe.id, {
         title,
-        image_url: imageUrl,
+        image_url: finalImageUrl,
         instagram_url: instagramUrl,
         ingredients: ingredients.map((item) => item.trim()).filter(Boolean),
         steps: steps.map((item) => item.trim()).filter(Boolean),
@@ -84,8 +96,25 @@ export function EditRecipeForm({ recipe }: EditRecipeFormProps) {
         </label>
       </div>
       <label className="space-y-2">
-        <span className="text-sm font-medium text-[var(--text)]">Image URL</span>
-        <input value={imageUrl} onChange={(event) => setImageUrl(event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
+        <span className="text-sm font-medium text-[var(--text)]">Image</span>
+        <input 
+          type="file" 
+          accept="image/*" 
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            if (file) {
+              setImageFile(file);
+              setImagePreview(URL.createObjectURL(file));
+            }
+          }} 
+          className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3 file:mr-4 file:rounded-full file:border-0 file:bg-[var(--accent)] file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:opacity-90" 
+        />
+        {(imagePreview || imageUrl) && (
+          <div className="mt-4 overflow-hidden rounded-2xl border border-[rgba(31,31,31,0.08)]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={imagePreview || imageUrl} alt="Preview" className="h-64 w-full object-cover" />
+          </div>
+        )}
       </label>
 
       <div className="grid gap-4 md:grid-cols-3">
