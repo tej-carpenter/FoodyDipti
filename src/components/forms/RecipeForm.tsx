@@ -15,6 +15,7 @@ export function RecipeForm() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
   const [ingredients, setIngredients] = useState(['']);
+  const [normalizedIngredients, setNormalizedIngredients] = useState(['']);
   const [steps, setSteps] = useState(['']);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [customTags, setCustomTags] = useState('');
@@ -51,6 +52,7 @@ export function RecipeForm() {
         image_url: uploadedImageUrl,
         instagram_url: instagramUrl,
         ingredients: ingredients.filter(Boolean),
+        normalizedIngredients: normalizedIngredients.filter(Boolean),
         steps: steps.filter(Boolean),
         predefined_tags: selectedTags,
         custom_tags: parsedCustomTags,
@@ -66,6 +68,7 @@ export function RecipeForm() {
       setImageFile(null);
       setImagePreview('');
       setIngredients(['']);
+      setNormalizedIngredients(['']);
       setSteps(['']);
       setSelectedTags([]);
       setCustomTags('');
@@ -160,6 +163,21 @@ export function RecipeForm() {
           </div>
           {steps.map((step, index) => (
             <input key={`step-${index}`} value={step} onChange={(event) => updateList(steps, setSteps, index, event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-[var(--text)]">Normalized Ingredients</span>
+          <button type="button" onClick={() => setNormalizedIngredients((current) => [...current, ''])} className="text-sm text-[var(--accent)]">Add</button>
+        </div>
+        <div className="space-y-2">
+          {normalizedIngredients.map((ingredient, index) => (
+            <div key={`normalized-${index}`} className="flex gap-2 items-center">
+              <input value={ingredient} onChange={(event) => updateList(normalizedIngredients, setNormalizedIngredients, index, event.target.value)} className="w-full rounded-2xl border border-[rgba(31,31,31,0.08)] bg-white px-4 py-3" />
+              <button type="button" onClick={() => setNormalizedIngredients((current) => current.length > 1 ? current.filter((_, i) => i !== index) : [''])} className="text-sm text-red-500 font-medium px-2">Remove</button>
+            </div>
           ))}
         </div>
       </div>

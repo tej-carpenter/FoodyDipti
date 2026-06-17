@@ -7,6 +7,8 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { RecipeGrid } from '@/components/RecipeGrid';
 import { PaginatedRecipeGrid } from '@/components/PaginatedRecipeGrid';
 import { SearchFilterBar } from '@/components/SearchFilterBar';
+import { IngredientDiscovery } from '@/components/ingredient-discovery';
+import { NewFeaturePopup } from '@/components/new-feature-popup';
 import { fetchRecipes } from '@/lib/firestore';
 import { getRecipeMetrics } from '@/lib/recipe-ui';
 import type { Recipe } from '@/types';
@@ -67,6 +69,7 @@ export default function HomePage() {
 
   return (
     <div>
+      <NewFeaturePopup />
       {/* Fixed header space filler */}
       <div className="h-[70px]" />
 
@@ -149,6 +152,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <IngredientDiscovery recipes={recipes} />
 
       <section id="trending" className="space-y-6">
         <div className="space-y-2">

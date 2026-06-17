@@ -9,6 +9,11 @@ export type Recipe = {
   saves_count?: number;
   serving_count?: number;
   ingredients: string[];
+  /**
+   * Purpose:
+   * Used for future ingredient matching, search, and recommendation features.
+   */
+  normalizedIngredients?: string[];
   steps: string[];
   predefined_tags: string[];
   custom_tags: string[];

@@ -14,29 +14,46 @@ function requireDb() {
 
 export async function fetchRecipes() {
   if (!firebaseDb) {
-    return mockRecipes;
+    return mockRecipes.map(recipe => ({ ...recipe, normalizedIngredients: recipe.normalizedIngredients ?? [] }));
   }
 
   try {
     const snapshot = await getDocs(query(collection(requireDb(), 'recipes'), orderBy('created_at', 'desc'), limit(60)));
-    return snapshot.docs.map((document) => ({ id: document.id, ...(document.data() as Omit<Recipe, 'id'>) }));
+    return snapshot.docs.map((document) => {
+      const data = document.data() as Omit<Recipe, 'id'>;
+      return { 
+        id: document.id, 
+        ...data,
+        normalizedIngredients: data.normalizedIngredients ?? []
+      };
+    });
   } catch (fetchError) {
     console.error('Failed to fetch recipes from Firestore. Falling back to mock recipes.', fetchError);
-    return mockRecipes;
+    return mockRecipes.map(recipe => ({ ...recipe, normalizedIngredients: recipe.normalizedIngredients ?? [] }));
   }
 }
 
 export async function fetchRecipe(id: string) {
   if (!firebaseDb) {
-    return mockRecipes.find((recipe) => recipe.id === id) ?? null;
+    const recipe = mockRecipes.find((recipe) => recipe.id === id) ?? null;
+    return recipe ? { ...recipe, normalizedIngredients: recipe.normalizedIngredients ?? [] } : null;
   }
 
   try {
     const snapshot = await getDoc(doc(requireDb(), 'recipes', id));
-    return snapshot.exists() ? ({ id: snapshot.id, ...(snapshot.data() as Omit<Recipe, 'id'>) }) : null;
+    if (snapshot.exists()) {
+      const data = snapshot.data() as Omit<Recipe, 'id'>;
+      return { 
+        id: snapshot.id, 
+        ...data,
+        normalizedIngredients: data.normalizedIngredients ?? []
+      };
+    }
+    return null;
   } catch (fetchError) {
     console.error(`Failed to fetch recipe ${id} from Firestore.`, fetchError);
-    return mockRecipes.find((recipe) => recipe.id === id) ?? null;
+    const recipe = mockRecipes.find((recipe) => recipe.id === id) ?? null;
+    return recipe ? { ...recipe, normalizedIngredients: recipe.normalizedIngredients ?? [] } : null;
   }
 }
 
@@ -169,7 +186,7 @@ export async function uploadRecipe(recipe: Omit<Recipe, 'id' | 'created_at'>) {
 
 type EditableRecipeFields = Pick<
   Recipe,
-  'title' | 'image_url' | 'instagram_url' | 'ingredients' | 'steps' | 'predefined_tags' | 'custom_tags' | 'description' | 'cooking_time_minutes' | 'difficulty'
+  'title' | 'image_url' | 'instagram_url' | 'ingredients' | 'normalizedIngredients' | 'steps' | 'predefined_tags' | 'custom_tags' | 'description' | 'cooking_time_minutes' | 'difficulty'
 >;
 
 export async function updateRecipe(id: string, updates: EditableRecipeFields) {
